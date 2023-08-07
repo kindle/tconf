@@ -1,0 +1,67 @@
+{
+	"$schema": "https://raw.githubusercontent.com/martinring/tmlanguage/master/tmlanguage.json",
+	"name": "Tconf",
+	"patterns": [
+		{
+			"include": "#keywords"
+		},
+		{
+			"include": "#comments"
+		}
+	],
+	"repository": {
+		"keywords": {
+			"patterns": [{
+				"name": "keyword.object.tconf",
+				"match": "\\b(cls|event|var|veh|src|pub|block|row|block_hdr|row_hdr|pub_hdr|ref|notify|temp|tmp|bookrowmbo|pubrowmbo|pubrowmbo_hdr|bookrowmbp|pubrowmbp|pubrowmbp_hdr|time_service|sys)\\b"
+			},
+			{
+				"name": "keyword.transform.tconf",
+				"match": "\\b(SetReal|real|insert_rank|get_rank|add_row|add_to_index|bts_add|bts_clear|bts_find|bts_get_high_trade|bts_get_last_trade|bts_get_low_trade|bts_get_most_recent_trade|bts_get_open_trade|bts_get_trade_prices|bts_get_trade_keys|bts_get_trade_times|bts_get_trade_volumes|bts_remove|bts_update|clear_book|convert_date|convert_datetime|convert_string_to_fixedreal|convert_to_uint64|convert_time|is_utf8|convert_utf8_to_chn_gbk|convert_utf8_to_iso2022c|convert_utf8_to_iso2022j|create_pub_repeating_group|create_publication|date_to_string|delete_unwanted_index_bottom|delete_unwanted_index_top|delete_unwanted_rows|exists|find|flush_location|get_current_hires_time|get_current_hires_time_in_milliseconds|get_date_day|get_date_month|get_date_year|get_index_bottom|get_index_top|get_milliseconds_since_midnight|get_nanoseconds_since_midnight|get_prev_exch_trading_day|get_n_exchange_trading_day|get_n_calendar_day|get_real_base|get_real_exponent|get_row|hkfe_apply_market_status|hkfe_clear_market_status|hkfe_get_market_status|init_parent_identifier|init_leg_identifier|add_to_state_table|get_active_state|get_active_tss|get_active_iss|clear_state_table|Split|ignore|isAlpha|isDigit|keep_row|len|log_critical|log_info|log_warn|map|print|remove_row|rescale|ripple|strtime|str2date|substr|time_from_micros_since_midnight|time_from_millis_since_midnight|time_from_nanos_since_midnight|time_from_seconds_since_midnight|to_string|trim|date_diff_days|convert_from_gmt|convert_to_gmt|publication_has_summary|publication_has_row|to_int|to_real)\\b"
+			},
+			{
+				"name": "keyword.control.tconf",
+				"match": "\\b((?i)if|else|elseif|then|endif|div|mod|and|or|not|in)\\b"
+			},
+			{
+				"name": "keyword.constant.tconf",
+				"match": "#\\b((?i)blank|true|false|alias|absent|GMTDate|GMTTime|GMTDateTime)\\b"
+			}
+		]
+		},
+		"comments": {
+			"patterns": [
+				{
+					"begin": "/\\*\\*(?!/)",
+					"captures": {
+						"0": {
+							"name": "punctuation.definition.comment.tconf"
+						}
+					},
+					"end": "\\*/",
+					"name": "comment.block.documentation.tconf"
+				},
+				{
+					"begin": "/\\*",
+					"captures": {
+						"0": {
+							"name": "punctuation.definition.comment.tconf"
+						}
+					},
+					"end": "\\*/",
+					"name": "comment.block.json"
+				},
+				{
+					"captures": {
+						"1": {
+							"name": "punctuation.definition.comment.tconf"
+						}
+					},
+					"match": "(//).*$\\n?",
+					"name": "comment.line.double-slash.tconf"
+				}
+			]
+		}
+	},
+	"scopeName": "source.tconf"
+}

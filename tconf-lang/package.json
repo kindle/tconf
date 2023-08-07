@@ -1,0 +1,26 @@
+{
+  "name": "tconf-lang",
+  "displayName": "Tconf Lang",
+  "description": "Syntax highlighting for tconf lang",
+  "version": "1.0.0",
+  "publisher":"Bailin",
+  "engines": {
+    "vscode": "^1.80.0"
+  },
+  "categories": [
+    "Programming Languages"
+  ],
+  "contributes": {
+    "languages": [{
+      "id": "tconf",
+      "aliases": ["Tconf", "tconf"],
+      "extensions": [".tconf"],
+      "configuration": "./language-configuration.json"
+    }],
+    "grammars": [{
+      "language": "tconf",
+      "scopeName": "source.tconf",
+      "path": "./syntaxes/tconf.tmLanguage.json"
+    }]
+  }
+}
