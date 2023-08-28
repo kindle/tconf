@@ -25,7 +25,7 @@
 			},
 			{
 				"name": "keyword.constant.tconf",
-				"match": "#\\b((?i)blank|true|false|alias|absent|GMTDate|GMTTime|GMTDateTime)\\b"
+				"match": "#\\b((?i)blank|import|true|false|alias|absent|GMTDate|GMTTime|GMTDateTime)\\b"
 			}
 		]
 		},

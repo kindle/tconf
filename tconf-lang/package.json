@@ -2,7 +2,7 @@
   "name": "tconf-lang",
   "displayName": "Tconf Lang",
   "description": "Syntax highlighting for tconf lang",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "publisher":"Bailin",
   "engines": {
     "vscode": "^1.80.0"
