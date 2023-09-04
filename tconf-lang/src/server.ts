@@ -78,8 +78,6 @@ connection.onInitialized(() => {
 			connection.console.log('Workspace folder change event received.');
 		});
 	}
-
-	initKeywords();
 });
 
 // The example settings
@@ -102,7 +100,7 @@ connection.onDidChangeConfiguration(change => {
 		documentSettings.clear();
 	} else {
 		globalSettings = <ExampleSettings>(
-			(change.settings.tconf || defaultSettings)
+			(change.settings.languageServerExample || defaultSettings)
 		);
 	}
 
@@ -118,7 +116,7 @@ function getDocumentSettings(resource: string): Thenable<ExampleSettings> {
 	if (!result) {
 		result = connection.workspace.getConfiguration({
 			scopeUri: resource,
-			section: 'tconf'
+			section: 'languageServerExample'
 		});
 		documentSettings.set(resource, result);
 	}
@@ -142,9 +140,7 @@ async function validateTextDocument(textDocument: TextDocument): Promise<void> {
 
 	// The validator creates diagnostics for all uppercase words length 2 and more
 	const text = textDocument.getText();
-	const pattern = /\bmap((.+?):[ ]{0,}[A-Za-z]{1,})\b/g;
-
-	
+	const pattern = /\b[A-Z]{2,}\b/g;
 	let m: RegExpExecArray | null;
 
 	let problems = 0;
@@ -157,7 +153,7 @@ async function validateTextDocument(textDocument: TextDocument): Promise<void> {
 				start: textDocument.positionAt(m.index),
 				end: textDocument.positionAt(m.index + m[0].length)
 			},
-			message: `${m[0]}: string value in map must use quotes, example: {1:"ASK"})`,
+			message: `${m[0]} is all uppercase.`,
 			source: 'ex'
 		};
 		if (hasDiagnosticRelatedInformationCapability) {
@@ -196,7 +192,18 @@ connection.onCompletion(
 		// The pass parameter contains the position of the text document in
 		// which code complete got requested. For the example we ignore this
 		// info and always provide the same completion items.
-		return keywordMapping;
+		return [
+			{
+				label: 'TypeScript',
+				kind: CompletionItemKind.Text,
+				data: 1
+			},
+			{
+				label: 'JavaScript',
+				kind: CompletionItemKind.Text,
+				data: 2
+			}
+		];
 	}
 );
 
@@ -204,12 +211,13 @@ connection.onCompletion(
 // the completion list.
 connection.onCompletionResolve(
 	(item: CompletionItem): CompletionItem => {
-		const data = documentMap.get(item.data);
-		if(data){
-			item.detail = data.detail;
-			item.documentation = data.documentation;
+		if (item.data === 1) {
+			item.detail = 'TypeScript details';
+			item.documentation = 'TypeScript documentation';
+		} else if (item.data === 2) {
+			item.detail = 'JavaScript details';
+			item.documentation = 'JavaScript documentation';
 		}
-
 		return item;
 	}
 );
@@ -220,56 +228,3 @@ documents.listen(connection);
 
 // Listen on the connection
 connection.listen();
-
-// below are document for tconf
-const keywordMapping:any = [];
-
-function initKeywords(){
-	const constantKeywords = "Blank|import|true|false|alias|absent|GMTDate|GMTTime|GMTDateTime";
-	const transformKeywords = "SetReal|real|insert_rank|get_rank|add_row|add_to_index|bts_add|bts_clear|bts_find|bts_get_high_trade|bts_get_last_trade|bts_get_low_trade|bts_get_most_recent_trade|bts_get_open_trade|bts_get_trade_prices|bts_get_trade_keys|bts_get_trade_times|bts_get_trade_volumes|bts_remove|bts_update|clear_book|convert_date|convert_datetime|convert_string_to_fixedreal|convert_to_uint64|convert_time|is_utf8|convert_utf8_to_chn_gbk|convert_utf8_to_iso2022c|convert_utf8_to_iso2022j|create_pub_repeating_group|create_publication|date_to_string|delete_unwanted_index_bottom|delete_unwanted_index_top|delete_unwanted_rows|exists|find|flush_location|get_current_hires_time|get_current_hires_time_in_milliseconds|get_date_day|get_date_month|get_date_year|get_index_bottom|get_index_top|get_milliseconds_since_midnight|get_nanoseconds_since_midnight|get_prev_exch_trading_day|get_n_exchange_trading_day|get_n_calendar_day|get_real_base|get_real_exponent|get_row|hkfe_apply_market_status|hkfe_clear_market_status|hkfe_get_market_status|init_parent_identifier|init_leg_identifier|add_to_state_table|get_active_state|get_active_tss|get_active_iss|clear_state_table|Split|ignore|isAlpha|isDigit|keep_row|len|log_critical|log_info|log_warn|map|print|remove_row|rescale|ripple|strtime|str2date|substr|time_from_micros_since_midnight|time_from_millis_since_midnight|time_from_nanos_since_midnight|time_from_seconds_since_midnight|to_string|trim|date_diff_days|convert_from_gmt|convert_to_gmt|publication_has_summary|publication_has_row|to_int|to_real";
-	
-	constantKeywords.split('|').forEach(k=>{
-		keywordMapping.push({
-			label: k,
-			kind: CompletionItemKind.Constant,
-			data: 1
-		});
-	});
-
-	transformKeywords.split('|').forEach(k=>{
-		keywordMapping.push({
-			label: k,
-			kind: CompletionItemKind.Function,
-			data: 2
-		});
-	});
-}
-
-const documentMap = new Map();
-documentMap.set(1, {
-	detail:"Constant",
-	documentation:``
-});
-documentMap.set(2, {
-	detail:"Standard (basic) ripple: moves values from field to field (no L2 or unwinding supported).",
-	documentation:`ripple ( from, ripple_set )
-
-	· [in] from : variant Value to ripple to first value in ripple set, typically a message field or an enum/constant.
-				
-	· [in_out] ripple_set : array Set of fields in the ripple stack. The first field gets the value in 'from,' the second field gets the value from the first, and so on.
-				
-	ripple(tmp.tick_direction,[veh.bid_tick1,veh.bid_tick2,veh.bid_tick3])
-				
-	ripple(tmp.tick_direction,[veh.ask_tick1,veh.ask_tick2,veh.ask_tick3])
-	
-	ripple(veh.TRDPRC_1, [veh.trdprc_2, veh.trdprc_3, veh.trdprc_4, veh.trdprc_5])`
-});
-documentMap.set(3, {
-	detail:"Transform: convert_utf8_to_iso2022j",
-	documentation:`todo`
-});
-
-
-
-
-

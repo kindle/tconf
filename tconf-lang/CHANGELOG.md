@@ -2,7 +2,13 @@
 
 The notes below have been kept for historical purposes.
 
-## [1.0.3] - 2023-09-01
+## [1.0.39] - 2023-09-04
+
+### Fixed
+
+- Fix LSP server not activated issue.
+
+## [1.0.5] - 2023-09-01
 
 ### Added
 

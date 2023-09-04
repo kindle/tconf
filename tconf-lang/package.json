@@ -1,15 +1,19 @@
 {
 	"name": "tconf-lang",
-	"displayName": "Tconf Lang",
-	"description": "Syntax highlighting for tconf lang",
+	"displayName": "Tconf",
+	"description": "Syntax highlighting, function completions, diagnostics, and more!",
 	"author": "Bailin Wei",
 	"license": "MIT",
-	"version": "1.0.3",
+	"version": "1.0.40",
 	"publisher": "Bailin",
 	"categories": [
 		"Programming Languages"
 	],
 	"icon": "images/icon.png",
+	"repository": {
+		"type": "git",
+		"url": "https://github.com/kindle/tconf"
+	},
 	"keywords": [
 		"multi-root ready"
 	],
@@ -43,15 +47,15 @@
 		],
 		"configuration": {
 			"type": "object",
-			"title": "Example configuration",
+			"title": "Tconf Configuration",
 			"properties": {
-				"languageServerExample.maxNumberOfProblems": {
+				"tconf.maxNumberOfProblems": {
 					"scope": "resource",
 					"type": "number",
 					"default": 100,
 					"description": "Controls the maximum number of problems produced by the server."
 				},
-				"languageServerExample.trace.server": {
+				"tconf.trace.server": {
 					"scope": "window",
 					"type": "string",
 					"enum": [
