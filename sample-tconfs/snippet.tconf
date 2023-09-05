@@ -1,0 +1,9 @@
+IF exists(src.BEST_BSIZ1) == #true THEN
+	tmp.need_update = #true
+	IF src.BEST_BSIZ1 != "0" THEN
+		BEST_BSIZ1 = src.BEST_BSIZ1
+		GV1_TEXT = map(src.BEST_BSIZ9, {"1":"HKK","2":"TOH"})
+	ELSE
+		BEST_BSIZ1 = #blank
+	ENDIF
+ENDIF

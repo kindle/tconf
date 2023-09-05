@@ -1,0 +1,148 @@
+//log_info("start to jpjepx market rule, veh.RIC=" + veh.RIC)
+
+tmp.need_update = #false
+
+IF exists(src.TRDPRC_1) == #true THEN
+	tmp.need_update = #true
+
+	IF src.TRDPRC_1 == "0" THEN
+		TRDPRC_1 = #Blank
+	ELSEIF src.TRDPRC_1 == "0.00" THEN
+		TRDPRC_1 = -0
+	ELSE
+		TRDPRC_1 = src.TRDPRC_1
+	ENDIF
+
+	TRDPRC_2 = veh.TRDPRC_1
+	TRDPRC_3 = veh.TRDPRC_2
+	TRDPRC_4 = veh.TRDPRC_3
+	TRDPRC_5 = veh.TRDPRC_4
+	//TODO::JAPAN Date
+	/*temp.action_jp_date = convert_date(time_service, #GMTDATE, #GMTTIME, "XETRA%DST")
+	IF veh.TRADE_DATE != (#GMTDate + 9) THEN
+		TRADE_DATE = #GMTDate + 9
+	ENDIF*/
+
+	TRDTIM_1 = #GMTTime
+	GV1_DATE = src.GV1_DATE
+ENDIF
+
+IF exists(src.OFFC_CODE2) == #true THEN
+	tmp.need_update = #true
+
+	IF src.OFFC_CODE2 == "0" THEN
+		OFFC_CODE2 = -0
+	ELSE
+		OFFC_CODE2 = src.OFFC_CODE2
+	ENDIFs
+ENDIF
+
+IF exists(src.BEST_BSIZ1) == #true THEN
+	tmp.need_update = #true
+	IF src.BEST_BSIZ1 != "0" THEN
+		BEST_BSIZ1 = src.BEST_BSIZ1
+		GV1_TEXT = map(src.BEST_BSIZ9, {"1":HKK,"2":TOH,"3":TOK,"4":CHB,"5":HKR,"6":KAN,"7":CHG,"8":SHI,"9":KYU})
+	ELSE
+		BEST_BSIZ1 = #blank
+	ENDIF
+ENDIF
+
+IF exists(src.BEST_BSIZ2) == #true THEN
+	tmp.need_update = #true
+	IF src.BEST_BSIZ2 != "0" THEN
+		BEST_BSIZ2 = src.BEST_BSIZ2
+		GV2_TEXT = map(src.BEST_BSIZ9, {"1":HKK,"2":TOH,"3":TOK,"4":CHB,"5":HKR,"6":KAN,"7":CHG,"8":SHI,"9":KYU})
+	ELSE
+		BEST_BSIZ2 = #blank
+	ENDIF
+ENDIF
+
+IF exists(src.BEST_BSIZ3) == #true THEN
+	tmp.need_update = #true
+	IF src.BEST_BSIZ3 != "0" THEN
+		BEST_BSIZ3 = src.BEST_BSIZ3
+		GV3_TEXT = map(src.BEST_BSIZ9, {"1":HKK,"2":TOH,"3":TOK,"4":CHB,"5":HKR,"6":KAN,"7":CHG,"8":SHI,"9":KYU})
+	ELSE
+		BEST_BSIZ3 = #blank
+	ENDIF
+ENDIF
+
+IF exists(src.BEST_BSIZ4) == #true THEN
+	tmp.need_update = #true
+	IF src.BEST_BSIZ4 != "0" THEN
+		BEST_BSIZ4 = src.BEST_BSIZ4
+		GV4_TEXT = map(src.BEST_BSIZ9, {"1":HKK,"2":TOH,"3":TOK,"4":CHB,"5":HKR,"6":KAN,"7":CHG,"8":SHI,"9":KYU})
+	ELSE
+		BEST_BSIZ4 = #blank
+	ENDIF
+ENDIF
+
+IF exists(src.BEST_BSIZ5) == #true THEN
+	tmp.need_update = #true
+	IF src.BEST_BSIZ5 != "0" THEN
+		BEST_BSIZ5 = src.BEST_BSIZ5
+		GV5_TEXT = map(src.BEST_BSIZ9, {"1":HKK,"2":TOH,"3":TOK,"4":CHB,"5":HKR,"6":KAN,"7":CHG,"8":SHI,"9":KYU})
+	ELSE
+		BEST_BSIZ5 = #blank
+	ENDIF
+ENDIF
+
+IF exists(src.BEST_BSIZ6) == #true THEN
+	tmp.need_update = #true
+	IF src.BEST_BSIZ6 != "0" THEN
+		BEST_BSIZ6 = src.BEST_BSIZ6
+		GV6_TEXT = map(src.BEST_BSIZ9, {"1":HKK,"2":TOH,"3":TOK,"4":CHB,"5":HKR,"6":KAN,"7":CHG,"8":SHI,"9":KYU})
+	ELSE
+		BEST_BSIZ6 = #blank
+	ENDIF
+ENDIF
+
+IF exists(src.BEST_BSIZ7) == #true THEN
+	tmp.need_update = #true
+	IF src.BEST_BSIZ7 != "0" THEN
+		BEST_BSIZ7 = src.BEST_BSIZ7
+		GV7_TEXT = map(src.BEST_BSIZ9, {"1":HKK,"2":TOH,"3":TOK,"4":CHB,"5":HKR,"6":KAN,"7":CHG,"8":SHI,"9":KYU})
+	ELSE
+		BEST_BSIZ7 = #blank
+	ENDIF
+ENDIF
+
+IF exists(src.BEST_BSIZ8) == #true THEN
+	tmp.need_update = #true
+	IF src.BEST_BSIZ8 != "0" THEN
+		BEST_BSIZ8 = src.BEST_BSIZ8
+		BUYER_ID = map(src.BEST_BSIZ8, {"1":HKK,"2":TOH,"3":TOK,"4":CHB,"5":HKR,"6":KAN,"7":CHG,"8":SHI,"9":KYU})
+	ELSE
+		BEST_BSIZ8 = #blank
+	ENDIF
+ENDIF
+
+IF exists(src.BEST_BSIZ9) == #true THEN
+	tmp.need_update = #true
+ 	IF src.BEST_BSIZ9 != "0" THEN
+		BEST_BSIZ9 = src.BEST_BSIZ9
+		SELLER_ID = map(src.BEST_BSIZ9, {"1":HKK,"2":TOH,"3":TOK,"4":CHB,"5":HKR,"6":KAN,"7":CHG,"8":SHI,"9":KYU})
+	ELSE
+		BEST_BSIZ9 = #blank
+	ENDIF
+ENDIF
+
+IF exists(src.BID) == #true THEN
+	tmp.need_update = #true
+
+	IF src.BID == "0" THEN
+		BID = #Blank
+	ELSE
+		BID = src.BID
+	ENDIF
+ENDIF
+
+IF exists(src.ASK) == #true THEN
+	tmp.need_update = #true
+
+	IF src.ASK == "0" THEN
+		ASK = #Blank
+	ELSE
+		ASK = src.ASK
+	ENDIF
+ENDIF
