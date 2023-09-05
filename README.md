@@ -14,6 +14,7 @@ Learn more about the rich features of the Tconf extension:
 - Completions
 - Show Hovers
 - Diagnostics regenerated on each file change or configuration change
+![Image text](https://github.com/kindle/tconf/blob/main/images/diagnostics.gif)
 
 ## Useful Commands
 Open the Command Palette (Command+Shift+P on macOS and Ctrl+Shift+P on Windows/Linux) and type in one of the following commands:
