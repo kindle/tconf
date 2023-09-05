@@ -1,11 +1,14 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
+/* eslint-disable no-empty */
+/* eslint-disable no-mixed-spaces-and-tabs */
 /* --------------------------------------------------------------------------------------------
  * Copyright (c) Microsoft Corporation. All rights reserved.
  * Licensed under the MIT License. See License.txt in the project root for license information.
  * ------------------------------------------------------------------------------------------ */
 const node_1 = require("vscode-languageserver/node");
 const vscode_languageserver_textdocument_1 = require("vscode-languageserver-textdocument");
+const doc_1 = require("./doc");
 // Create a connection for the server, using Node's IPC as a transport.
 // Also include all preview / proposed LSP features.
 const connection = (0, node_1.createConnection)(node_1.ProposedFeatures.all);
@@ -29,7 +32,10 @@ connection.onInitialize((params) => {
             // Tell the client that this server supports code completion.
             completionProvider: {
                 resolveProvider: true
-            }
+            },
+            hoverProvider: true,
+            documentFormattingProvider: true,
+            definitionProvider: true,
         }
     };
     if (hasWorkspaceFolderCapability) {
@@ -40,6 +46,79 @@ connection.onInitialize((params) => {
         };
     }
     return result;
+});
+/*
+connection.onDefinition((params): DefinitionLink[] => {
+    return [{
+        targetUri: params.textDocument.uri,
+        targetRange: { start: { line: 0, character: 2}, end: {line: 5, character: 45 } },
+        targetSelectionRange: { start: { line: 1, character: 5}, end: {line: 1, character: 10 } },
+        originSelectionRange: {
+            start: { line: params.position.line, character: Math.max(0, params.position.character - 4) },
+            end: { line: params.position.line, character: params.position.character + 4 }
+        }
+    }];
+});*/
+connection.onDefinition((params) => {
+    return [{
+            targetUri: params.textDocument.uri,
+            targetRange: { start: { line: 0, character: 2 }, end: { line: 5, character: 45 } },
+            targetSelectionRange: { start: { line: 1, character: 5 }, end: { line: 1, character: 10 } },
+            originSelectionRange: {
+                start: { line: params.position.line, character: Math.max(0, params.position.character - 4) },
+                end: { line: params.position.line, character: params.position.character + 4 }
+            }
+        }];
+});
+connection.onHover((params) => {
+    const hoverWord = getSymbolAtPosition(params.position, params.textDocument.uri);
+    return Promise.resolve({
+        //contents: ["Bailin Hover Tips for:"+JSON.stringify(params),"hover details"+hoverWord],
+        contents: getDoc(hoverWord) == hoverWord ? [] : [getDoc(hoverWord)],
+    });
+});
+const TokenSeparatorsXML = /[\t= <>"]/;
+function getSymbolAtPosition(position, documentUri) {
+    const range = {
+        start: { line: position.line, character: 0 },
+        end: { line: position.line, character: Number.MAX_VALUE }
+    };
+    //get the whole line 
+    const txtDoc = documents.get(documentUri);
+    const context = txtDoc.getText(range);
+    const offset = position.character;
+    let start = offset - 1;
+    while ((start > 0) && !context[start].match(TokenSeparatorsXML)) {
+        start--;
+    }
+    let end = offset;
+    while ((end < context.length) && !context[end].match(TokenSeparatorsXML)) {
+        end++;
+    }
+    const symbol = context.substr(start + 1, end - start - 1);
+    console.log(`${start}->${end}- symbol: ${symbol}`);
+    return symbol;
+}
+connection.onDocumentFormatting((params) => {
+    const { textDocument } = params;
+    const doc = documents.get(textDocument.uri);
+    const text = doc.getText();
+    const pattern = /\b[A-Z]{3,}\b/g;
+    let match;
+    const res = [];
+    // find upper case strings
+    while ((match = pattern.exec(text))) {
+        res.push({
+            range: {
+                start: doc.positionAt(match.index),
+                end: doc.positionAt(match.index + match[0].length),
+            },
+            // replace upper case strings to Camel
+            newText: match[0],
+            //newText: match[0].replace(/(?<=[A-Z])[A-Z]+/, (r) => r.toLowerCase()),
+        });
+    }
+    return Promise.resolve(res);
 });
 connection.onInitialized(() => {
     if (hasConfigurationCapability) {
@@ -179,31 +258,52 @@ function initKeywords() {
         keywordMapping.push({
             label: k,
             kind: node_1.CompletionItemKind.Function,
-            data: 2
+            data: k
         });
     });
 }
+function getDoc(input) {
+    let keyWord = input.replace("#", "");
+    const index = keyWord.indexOf('(');
+    if (index > -1) {
+        keyWord = keyWord.substring(0, index);
+    }
+    const content = documentMap.get(keyWord.trim());
+    if (content) {
+        return content.documentation;
+    }
+    return input;
+}
 const documentMap = new Map();
-documentMap.set(1, {
+documentMap.set("1", {
     detail: "Constant",
     documentation: ``
 });
-documentMap.set(2, {
-    detail: "Standard (basic) ripple: moves values from field to field (no L2 or unwinding supported).",
-    documentation: `ripple ( from, ripple_set )
+doc_1.DocData.metaData.forEach((m) => {
+    let doc = `
+${m.name}
 
-	· [in] from : variant Value to ripple to first value in ripple set, typically a message field or an enum/constant.
-				
-	· [in_out] ripple_set : array Set of fields in the ripple stack. The first field gets the value in 'from,' the second field gets the value from the first, and so on.
-				
-	ripple(tmp.tick_direction,[veh.bid_tick1,veh.bid_tick2,veh.bid_tick3])
-				
-	ripple(tmp.tick_direction,[veh.ask_tick1,veh.ask_tick2,veh.ask_tick3])
-	
-	ripple(veh.TRDPRC_1, [veh.trdprc_2, veh.trdprc_3, veh.trdprc_4, veh.trdprc_5])`
-});
-documentMap.set(3, {
-    detail: "Transform: convert_utf8_to_iso2022j",
-    documentation: `todo`
+${m.description}
+
+Tags: ${m.tags.join(', ')}
+
+${m.functionSignature}
+
+`;
+    m.parameters.forEach((p) => {
+        p.split('\n').forEach((pp, index) => {
+            doc += (index > 0 ? `    ` : `  •  `) + pp;
+            doc += index > 0 ? "" : `
+
+`;
+        });
+        doc += `
+
+`;
+    });
+    documentMap.set(m.name, {
+        detail: "",
+        documentation: doc
+    });
 });
 //# sourceMappingURL=server.js.map

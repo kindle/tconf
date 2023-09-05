@@ -3,9 +3,6 @@ tmp.sysMSTime = time_from_millis_since_midnight( get_current_hires_time_in_milli
 tmp.preseq= veh.CI_SEQNUM
 		tmp.lstseq= src.CI_SEQNUM
 		IF tmp.lstseq != tmp.preseq THEN
-map(:A)
-ripple
-
 
 			IF exists(src.CD_RS_ENC) == #true AND exists(src.CI_SIN) == #true THEN
 				tmp.identifier= src.CD_RS_ENC
@@ -14,6 +11,8 @@ ripple
 				IF tmp.identifier == "r" AND tmp.modflag == 1 THEN
 					tmp.sysTime= #GMTTime
 					
+				    ripple()
+					convert_datetime
 					
 					tmp.sysDate= #GMTDate
 					tmp.closeprice= veh.HST_CLOSE

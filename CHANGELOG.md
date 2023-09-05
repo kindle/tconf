@@ -2,7 +2,12 @@
 
 The notes below have been kept for historical purposes.
 
-## [1.0.39] - 2023-09-04
+## [1.1.0] - 2023-09-05
+
+### Added
+
+- Add Documents for 134 Transform functions
+- Add Hover Support for Transform functions
 
 ### Fixed
 

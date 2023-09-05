@@ -4,7 +4,7 @@
 	"description": "Syntax highlighting, function completions, diagnostics, and more!",
 	"author": "Bailin Wei",
 	"license": "MIT",
-	"version": "1.0.40",
+	"version": "1.0.58",
 	"publisher": "Bailin",
 	"categories": [
 		"Programming Languages"
