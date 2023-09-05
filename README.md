@@ -14,6 +14,7 @@ Learn more about the rich features of the Tconf extension:
 - Completions
 - Show Hovers
 - Diagnostics regenerated on each file change or configuration change
+![Image text](https://github.com/kindle/tconf/blob/main/images/diagnostics.gif)
 ![](https://github.com/kindle/tconf/diagnostics.gif)
 
 ## Useful Commands
