@@ -10,13 +10,15 @@ IF exists(src.TRDPRC_1) == #true THEN
 	ELSEIF src.TRDPRC_1 == "0.00" THEN
 		TRDPRC_1 = -0
 	ELSE
-		TRDPRC_1 = src.TRDPRC_1
+		RDPRC_1 = src.TRDPRC_1
 	ENDIF
 
 	TRDPRC_2 = veh.TRDPRC_1
 	TRDPRC_3 = veh.TRDPRC_2
 	TRDPRC_4 = veh.TRDPRC_3
-	TRDPRC_5 = veh.TRDPRC_4
+	RDPRC_5 = veh.TRDPRC_4
+	RDPRC_5 = veh.TRDPRC_45
+	RDPRC_5 = veh.RDPRC_4
 	//TODO::JAPAN Date
 	/*temp.action_jp_date = convert_date(time_service, #GMTDATE, #GMTTIME, "XETRA%DST")
 	IF veh.TRADE_DATE != (#GMTDate + 9) THEN
@@ -25,6 +27,9 @@ IF exists(src.TRDPRC_1) == #true THEN
 
 	TRDTIM_1 = #GMTTime
 	GV1_DATE = src.GV1_DATE
+	GV1_DATE = src.GV13_DATE
+	GV1_DATE = src.V1_DATE
+	GV1_DATE = src.GV1_DATE111
 ENDIF
 
 IF exists(src.OFFC_CODE2) == #true THEN

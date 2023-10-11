@@ -13,6 +13,7 @@ tmp.preseq= veh.CI_SEQNUM
 					
 				    ripple()
 					convert_datetime
+					copy_all();
 					
 					tmp.sysDate= #GMTDate
 					tmp.closeprice= veh.HST_CLOSE

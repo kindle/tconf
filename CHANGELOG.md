@@ -2,6 +2,12 @@
 
 The notes below have been kept for historical purposes.
 
+## [1.1.8] - 2023-09-28
+
+### Added
+
+- Add TRWF2.DAT FID name check
+
 ## [1.1.0] - 2023-09-05
 
 ### Added

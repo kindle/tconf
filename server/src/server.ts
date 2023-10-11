@@ -31,6 +31,7 @@ import {
 	TextDocument, TextEdit
 } from 'vscode-languageserver-textdocument';
 import { DocData } from './doc';
+import { DictData } from './dict';
 
 // Create a connection for the server, using Node's IPC as a transport.
 // Also include all preview / proposed LSP features.
@@ -282,6 +283,34 @@ async function validateTextDocument(textDocument: TextDocument): Promise<void> {
 						range: Object.assign({}, diagnostic.range)
 					},
 					message: 'Particularly for names'
+				}
+			];
+		}
+		diagnostics.push(diagnostic);
+	}
+
+	//TRWF2 check
+	const pattern_dict = new RegExp(`(?!\\b(veh|src)\\.(?:${DictData.dictData.join('|')}))(veh|src)\\.[^.\\s]+`, 'g');
+	//const pattern_dict = new RegExp(`(\\b\\w+\\s*=\\s*)?(?!\\b(?:veh|src)\\.(?:${DictData.dictData.join('|')}))(\\w+)(?=\\s*=|$)`, 'g');
+	while ((m = pattern_dict.exec(text)) && problems < settings.maxNumberOfProblems) {
+		problems++;
+		const diagnostic: Diagnostic = {
+			severity: DiagnosticSeverity.Error,
+			range: {
+				start: textDocument.positionAt(m.index),
+				end: textDocument.positionAt(m.index + m[0].length)
+			},
+			message: `${m[0]}: FID name does not exist in TRWF2 dictionary)`,
+			source: 'ex'
+		};
+		if (hasDiagnosticRelatedInformationCapability) {
+			diagnostic.relatedInformation = [
+				{
+					location: {
+						uri: textDocument.uri,
+						range: Object.assign({}, diagnostic.range)
+					},
+					message: 'FID name does not exist in TRWF2 dictionary'
 				}
 			];
 		}

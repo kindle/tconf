@@ -5,5 +5,7 @@ IF exists(src.BEST_BSIZ1) == #true THEN
 		GV1_TEXT = map(src.BEST_BSIZ9, {"1":"HKK","2":"TOH"})
 	ELSE
 		BEST_BSIZ1 = #blank
+		
 	ENDIF
+	tmp.sysNSTime = time_from_nanos_since_midnight
 ENDIF
